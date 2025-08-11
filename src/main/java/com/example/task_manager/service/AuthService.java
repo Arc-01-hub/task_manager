@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,6 +61,20 @@ public class AuthService  {
             return "Somthing Wrong";
         }
         
+    }
+    // GET CURRENT USER 
+    public User getCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUserName(username)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        return user;
+    }
+    // GET CURRENT USER ID
+    public Long getCurrentUserId() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUserName(username)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        return user.getId();
     }
 
 }
